@@ -1,24 +1,15 @@
-var cluster = require('cluster'),
-    app = require('./express-app');
+// Load the http module to create an http server.
+var httpServer = require('http-server')
+	, express = require('express');
 
-var workers = {},
-    count = require('os').cpus().length;
+// Configure our HTTP server to respond with Hello World to all requests.
+var server = httpServer.createServer(function (request, response) {
+  response.writeHead(200, {"Content-Type": "text/plain"});
+  response.end("Hello World\n");
+});
 
-function spawn(){
-  var worker = cluster.fork();
-  workers[worker.pid] = worker;
-  return worker;
-}
+// Listen on port 8000, IP defaults to 127.0.0.1
+server.listen(8000);
 
-if (cluster.isMaster) {
-  for (var i = 0; i < count; i++) {
-    spawn();
-  }
-  cluster.on('death', function(worker) {
-    console.log('worker ' + worker.pid + ' died. spawning a new process...');
-    delete workers[worker.pid];
-    spawn();
-  });
-} else {
-  app.listen(process.env.PORT || 5000);
-}
+// Put a friendly message on the terminal
+console.log("Server running at http://127.0.0.1:8000/");
