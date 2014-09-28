@@ -14,6 +14,6 @@
   },
   "dependencies": {
     "express": "*",
-    "http-server": "*"
+    "http": "*"
   }
 } 
